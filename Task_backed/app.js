@@ -4,6 +4,7 @@ const dbconn = require("./config/db")
 const cors = require("cors")
 
 const taskRouter = require("./routes/taskRoutes")
+const userRouter = require('./routes/userRoute')
 
 const port = process.env.PORT || 5000
 
@@ -17,6 +18,8 @@ app.use("./", (req, res)=>{
 })
 
 app.use('./task', taskRouter)
+app.use('/user',userRouter)
+
 
 
 
@@ -25,5 +28,5 @@ app.use('./task', taskRouter)
 
 
 app.listen(port, ()=>{
-    console.log(`Server running on http://locolhost:${port}`)
+    console.log(`Server running on http://localhost:${port}`)
 })
