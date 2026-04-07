@@ -1,30 +1,31 @@
-const express = require("express")
-require("dotenv").config()
-const dbconn = require("./config/db")
-const cors = require("cors")
+const express = require('express')
+require('dotenv').config()
+const cors = require('cors')
 
-const taskRouter = require("./routes/taskRoutes")
-const userRouter = require('./routes/userRoute')
+const dbConn = require('./config/db')
 const association = require('./models/associations')
 
-const port = process.env.PORT
+const taskRouter = require('./routes/taskRoute')
+
+const userRouter = require('./routes/userRoute')
+const assignTaskRouter = require('./routes/assignTaskRoute')
+
+
+
+const port = process.env.PORT 
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 
-app.use("/", (req, res)=>{
-    res.send('i am server')
+app.get('/',(req,res)=>{
+    res.send("I am Server ")
 })
 
 app.use('/task', taskRouter)
-app.use('/user',userRouter)
+app.use('/user', userRouter)
+app.use('/assignTask', assignTaskRouter)
 
-
-
-
-
-
-app.listen(port, ()=>{
-    console.log(`Server running on http://localhost:${port}`)
+app.listen(port,()=>{
+    console.log(`server running on http://localhost:${port}`)
 })

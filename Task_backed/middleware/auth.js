@@ -10,12 +10,12 @@ function auth(req,res,next){
 
 let token = req.headers.authorization
 if(!token){
-    res.status(400).send({"msg":"Please Login"})
+  return  res.status(400).send({"msg":"Please Login"})
 }
 if(token.startsWith("Bearer")){
     token = token.split(" ")[1]
     // console.log(token,"********")
-    const decoded = jwt.verify(token, process.env.SECREAT_KEY)
+    const decoded = jwt.verify(token, process.env.SECRET_KEY)
 console.log(decoded)
 req.user = decoded 
 console.log(req.user.ID)
@@ -28,10 +28,10 @@ console.log(req.user.ID)
 }
 
 function admin(req,res,next){
-    if(req.user.role == "admin"){
+    if(req.user.role == "user"){
             next()
     }else{
-        res.status(400).send({"msg":"Access denied"})
+      return res.status(400).send({"msg":"Access denied"})
     }
 }
 
