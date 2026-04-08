@@ -3,12 +3,9 @@ const Task = require('../models/taskModel')
 
 async function createTask(req, res) {
     try {
-
-        // console.log(req.body)
-        // console.log(req.user)
         const { title, description, startDate, endDate, status, priority } = req.body
         const Id = req.user.ID
-     const newTask = await Task.create({
+        const newTask = await Task.create({
             title: title,
             description: description,
             startDate: startDate,
@@ -21,7 +18,7 @@ async function createTask(req, res) {
         console.log(newTask)
         res.status(200).send({ success: true, msg: "Task created successfully" })
     } catch (error) {
-         console.log(error)
+        console.log(error)
         res.status(500).send({ success: false, msg: "Server Error" })
     }
 }
@@ -43,7 +40,7 @@ async function updateTaskByAdmin(req, res) {
 
     const task = await Task.findByPk(task_id)
     if (!task) {
-        res.status(400).send({ msg: "task not found" })
+        return res.status(400).send({ msg: "task not found" })
     } else {
         task.title = req.body.title || task.title
         task.description = req.body.description || task.description
@@ -57,14 +54,16 @@ async function updateTaskByAdmin(req, res) {
         res.status(200).send({ msg: "Task updated successfully", success: true })
     }
 }
-async function update_my_task(req,res) {
+async function update_my_task(req, res) {
     try {
-        console.log(req.user.ID)
-        console.log(req.params.taskID)
-        const task_id = req.params.taskID
+        // console.log(req.user.ID)
+        // console.log(req.params.taskID)
+
+         
         const task = await Task.findByPk(task_id)
+        // console.log(task, "7777777777777777")
         if (!task) {
-            res.status(400).send({ msg: "task not found" })
+            return res.status(400).send({ msg: "task not found" })
         } else {
             task.status = req.body.status || task.status
             await task.save()
@@ -92,6 +91,21 @@ async function deleteTask(req, res) {
     }
 }
 
+async function getTaskById(req, res) {
+    try {
+        const task = await Task.findByPk(req.params.task_ID)
+        if (task) {
+            return res.status(200).send({ success: true, task:task })
+        
+        } else {
+            res.status(400).send({ msg: "Task not found" })
+        }
+
+    } catch (error) {
+        res.status(500).send({ success: false, msg: "Server Error" })
+
+    }
+}
 
 
 module.exports = {
@@ -99,7 +113,8 @@ module.exports = {
     getAllTasks,
     updateTaskByAdmin,
     update_my_task,
-    deleteTask
+    deleteTask,
+    getTaskById
 }
 
 // {

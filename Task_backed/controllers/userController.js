@@ -47,7 +47,7 @@ async function login(req, res) {
                 const ID = alreadyUser.id
                 const role = alreadyUser.role
                 // console.log(ID,"******ID")
-                const genToken = jwt.sign({ ID: ID,role:role }, process.env.SECRET_KEY, { expiresIn: "1hr" })
+                const genToken = jwt.sign({ id: ID, role: role }, process.env.SECRET_KEY, { expiresIn: "7d" })
                 res.status(202).send({ msg: "Login successful", token: genToken })
             }
         }
@@ -60,11 +60,13 @@ async function login(req, res) {
 async function getUserInfo(req, res) {
     try {
         const ID = req.user.ID
+        // console.log(ID, "********************************8")
         const loggedUserInfo = await User.findByPk(ID, {
             attributes: {
                 exclude: ["password"]
             }
         })
+        // console.log(loggedUserInfo, "**********************************")
         res.status(200).send({ user: loggedUserInfo, success: true })
     } catch (error) {
         res.status(500).send({ success: false, msg: "Server Error" })
@@ -72,12 +74,38 @@ async function getUserInfo(req, res) {
     }
 }
 
-function updateUser(req,res){
+async function updateUser(req,res){
     try{
-        res.status(200).send({success:true})
+
+        const ID = req.user.ID
+        console.log(ID, "333333333333333333333333333333333")
+        const user = await User.findByPk(ID)
+        console.log(user, "111111111111111111111111111111111")
+        if(!user){
+             return res.status(400).send({ msg: "task not found" })
+        } else{
+            user.name = req.body.name || user.name
+            user.email = req.body.email || user.email
+            user.password = req.body.password || user.password
+            user.contactNumber = req.body.contactNumber || user.contactNumber
+            await user.save()
+        res.status(200).send({success:true , msg:"User update successfully"})
+
+        }
     }catch (error) {
         res.status(500).send({ success: false, msg: "Server Error" })
 
+    }
+}
+
+async function getAllUsers(req, res){
+    try {
+            const allUser = await User.findAll()
+            res.status(200).send({success:true, allUser:allUser})
+        
+    } catch (error) {
+        res.status(500).send({ success: false, msg: "Server Error" })
+        
     }
 }
 
@@ -85,6 +113,7 @@ module.exports = {
     register,
     login,
     getUserInfo,
+    getAllUsers,
     updateUser
 }
 

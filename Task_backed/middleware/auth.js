@@ -1,40 +1,48 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+function auth(req, res, next) {
+    try {
+        let token = req.headers.authorization
 
+        if (!token) {
+            return res.status(401).send({ msg: "Please Login" })
+        }
 
-function auth(req,res,next){
-// console.log(req.headers)
-// console.log("************************")
-// console.log(req.headers.authorization)
+        if (token.startsWith("Bearer")) {
+            token = token.split(" ")[1]
 
-let token = req.headers.authorization
-if(!token){
-  return  res.status(400).send({"msg":"Please Login"})
-}
-if(token.startsWith("Bearer")){
-    token = token.split(" ")[1]
-    // console.log(token,"********")
-    const decoded = jwt.verify(token, process.env.SECRET_KEY)
-console.log(decoded)
-req.user = decoded 
-console.log(req.user.ID)
-    next()
+            const decoded = jwt.verify(token, process.env.SECRET_KEY)
 
-}else{
-    res.status(400).send({"msg": "Not authorized"})
-}
-
-}
-
-function admin(req,res,next){
-    if(req.user.role == "user"){
+            req.user = decoded 
+            console.log(req.user, "((((((()))))))")
             next()
-    }else{
-      return res.status(400).send({"msg":"Access denied"})
+        } else {
+            return res.status(401).send({ msg: "Not authorized" })
+        }
+
+    } catch (error) {
+        console.error("Auth Error:", error.message)
+
+        if (error.name === "TokenExpiredError") {
+            return res.status(401).send({ msg: "Token expired, login again" })
+        }
+
+        return res.status(401).send({ msg: "Invalid token" })
     }
 }
 
+function admin(req, res, next) {
+    if (!req.user) {
+        return res.status(401).send({ msg: "Unauthorized" })
+    }
+
+    if (req.user.role === "admin") {
+        next()
+    } else {
+        return res.status(403).send({ msg: "Access denied" })
+    }
+}
 
 
 module.exports = {auth, admin}

@@ -5,11 +5,12 @@ const router = express.Router()
 
 router.post('/register',userController.register)
 router.post('/login',userController.login) 
+
 router.get('/getUserInfo',auth, userController.getUserInfo)
 
-// router.patch('/updateUser/:user_Id', auth, userController.updateUser)
+router.patch('/updateUser', auth, userController.updateUser)
 
-//router.get('/getAllUsers, userController.getAllUsers) only name
+router.get('/getAllUsers', userController.getAllUsers)
 
 
 
