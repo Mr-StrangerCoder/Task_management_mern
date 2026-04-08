@@ -10,7 +10,7 @@ router.get('/getAllTasks', taskController.getAllTasks)
 
 router.put("/updateTaskByAdmin/:task_ID", auth, admin, taskController.updateTaskByAdmin)
 
-router.patch("/update_my_task/:taskID", auth,taskController.update_my_task)
+router.patch("/update_my_task/:task_ID", auth,taskController.update_my_task)
 
 router.delete('/deleteTask/:task_ID', auth, admin, taskController.deleteTask)
 

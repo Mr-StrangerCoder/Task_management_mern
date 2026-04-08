@@ -4,7 +4,7 @@ const Task = require('../models/taskModel')
 async function createTask(req, res) {
     try {
         const { title, description, startDate, endDate, status, priority } = req.body
-        const Id = req.user.ID
+        const Id = req.user.id
         const newTask = await Task.create({
             title: title,
             description: description,
@@ -59,9 +59,10 @@ async function update_my_task(req, res) {
         // console.log(req.user.ID)
         // console.log(req.params.taskID)
 
-         
+        const task_id = req.params.task_ID
+            console.log(task_id)
         const task = await Task.findByPk(task_id)
-        // console.log(task, "7777777777777777")
+        console.log(task, "7777777777777777")
         if (!task) {
             return res.status(400).send({ msg: "task not found" })
         } else {
@@ -95,8 +96,8 @@ async function getTaskById(req, res) {
     try {
         const task = await Task.findByPk(req.params.task_ID)
         if (task) {
-            return res.status(200).send({ success: true, task:task })
-        
+            return res.status(200).send({ success: true, task: task })
+
         } else {
             res.status(400).send({ msg: "Task not found" })
         }
