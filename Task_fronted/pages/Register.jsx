@@ -61,7 +61,7 @@ const Register = () => {
             }
 
         } catch (err) {
-            console.error(err)
+            console.error(err, "77777777777777777777777777")
             alert("Something went wrong")
         } finally {
             setLoading(false)

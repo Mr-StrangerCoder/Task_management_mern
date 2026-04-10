@@ -100,7 +100,7 @@ const Login = () => {
                         </span>
                     </div>
 
-                    {/* Button */}
+                
                     <button
                         className="btn btn-light w-100 mb-3"
                         disabled={loading}
@@ -108,7 +108,7 @@ const Login = () => {
                         {loading ? "Logging in..." : "Login"}
                     </button>
 
-                    {/* Register */}
+                
                     <div className="text-center">
                         <small>
                             Don't have an account?{" "}
