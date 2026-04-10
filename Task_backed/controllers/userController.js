@@ -3,8 +3,11 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const User = require('../models/userModel')
 
+const BASE_URL = 'http://localhost:5010/upload/'
+
 async function register(req, res) {
     const { name, email, password, contactNumber } = req.body
+     const imgPATH =req.file ?  req.file.filename : null
     try {
 
        const regUser = await User.findOne({ where: { email: email } })
@@ -21,7 +24,8 @@ async function register(req, res) {
                 name: name,
                 email: email,
                 password: hashPassword,
-                contactNumber: contactNumber
+                contactNumber: contactNumber,
+                img_path: imgPATH
             })
             res.status(200).send({ success: true, msg: "registered successfully" })
         }
@@ -66,8 +70,10 @@ async function getUserInfo(req, res) {
                 exclude: ["password"]
             }
         })
+         const loggedUserInfoSTR=loggedUserInfo.toJSON()
+        loggedUserInfoSTR.img_path =loggedUserInfo.img_path ? BASE_URL+loggedUserInfo.img_path : null
         // console.log(loggedUserInfo, "**********************************")
-        res.status(200).send({ user: loggedUserInfo, success: true })
+        res.status(200).send({ user: loggedUserInfoSTR, success: true })
     } catch (error) {
         res.status(500).send({ success: false, msg: "Server Error" })
 
